@@ -19,6 +19,8 @@
     &nbsp;&nbsp;&nbsp;&nbsp;*Capaz de fazer balanceamento de carga.*<br>
     *ClusterIP (Services)*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*Serve apenas para viabilizar a comunicação INTERNA entre os diferentes pods dentro de um mesmo cluster.*
+    *NodePort (Services)*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*Serve apenas para viabilizar a comunicação EXTERNA para o Cluster(SVC).*
 <br />
 
 **Início**<br>
@@ -96,18 +98,82 @@ spec:
 **Criando um Cluster IP**<br>
 *PowerShell*
 ---
+(pod-1 & portal-noticias <> ClusterIP/SVC <> pod-2)
 
-Criar arquivo pod-1.yaml
+Criar arquivo pod-1.yaml 
 
-> apiVersion: v1
+apiVersion: v1
 kind: Pod
 metadata:
   name: pod-1
+  labels:
+    app: primeiro-pod
 spec:
   containers:
     - name: container-pod-1
       image: nginx:latest
       ports:
-        - containerPort: 80 (requisição )
+        - containerPort: 80 (requisição)
+
+Criar arquivo pod-2.yaml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-2
+  labels:
+    app: segundo-pod (label1. pode-se utilizar qualquer chave valor nestas labels)
+    alura: cursos (label2)
+spec:
+  containers:
+    - name: container-pod-2
+      image: nginx:latest
+      ports:
+        - containerPort: 80 (requisição)
+
+> kubectl apply -f .\pod-1.yaml
+> kubectl apply -f .\pod-2.yaml
+> kubectl apply -f .\portal-noticias.yaml
+
+Criar arquivo svc-pod-2.yaml (Criaremos esse serviço ClusterIP para permitir comunicação entre todos os pods)
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-pod-2
+spec:
+  type: ClusterIP
+  selector: (binding)
+    app: segundo-pod (quando receber requisição deve encaminhar para o "segundo-pod")
+  ports:
+    - port: 80 (SVC_OUVINDO)
+      targetPort: 80 (SVC_ENCAMINHAR_PARA_QUEM_ESTIVER_LISTADO_SELECTOR)
+
+> kubectl apply -f .\pod-2.yaml (ira atualizar com as alterações realizadas)
+> kubectl apply -f .\svc-pod-2.yaml
+
+> kubectl get svc
+> kubectl exec -it pod-1 -- bash
+  # curl <IP_SVC>:80
+
+> kubectl exec -it portal-noticias -- bash
+  # curl <IP_SVC>:80 (requisição respondida apontando para o svc)
+(Se deletar o pod-2 então vai parar de funcionar, pois o SVC não terá para onde encaminhar a requisitção conforme configurado)
+---
+<br />
+
+**Criando um NodePort**<br>
+*PowerShell*
+---
+(Externo <> NodePort/SVC <> pod-1)
+
+Criar svc-pod-1.yaml
+
+
+> kubectl apply -f .\pod-1.yaml
+> kubectl apply -f .\svc-pod-1.yaml
+> kubectl get svc -o wide
+> kubectl get pods -o wide
+
+http://localhost:30000
 ---
 <br />

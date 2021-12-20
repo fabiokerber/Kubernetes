@@ -9,6 +9,7 @@ Pré requisito:
 
 Download Docker:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;https://www.docker.com/products/docker-desktop
+&nbsp;&nbsp;&nbsp;&nbsp;Settings > Kubernetes > Enable Kubernetes > Apply & Restart
 
 Comandos WSL:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;https://docs.microsoft.com/pt-br/windows/wsl/install-manual 
@@ -26,23 +27,27 @@ $ sudo apt-get update
 $ sudo apt-get install docker-ce
 $ sudo docker version
 $ sudo usermod -aG docker $(whoami)
-
-$ sudo curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-$ sudo chmod +x /usr/local/bin/docker-compose
-
-$ curl -L https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
 ```
 
-Instalação Docker Machine Git BASH:<br>
+Instalação kubectl Ubuntu:<br>
 ```
-$ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
-  mkdir -p "$HOME/bin" &&
-  curl -L $base/docker-machine-Windows-x86_64.exe > "$HOME/bin/docker-machine.exe" &&
-  chmod +x "$HOME/bin/docker-machine.exe"
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+$ kubectl version --client
+```
 
-$ docker-machine version
+Instalação kubectl Ubuntu:<br>
+```
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+$ kubectl version --client
+```
 
-$ docker-machine version 0.16.0, build 9371605
+Instalação minikube Ubuntu:<br>
+```
+$ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+$ sudo install minikube-linux-amd64 /usr/local/bin/minikube
+$ minikube start --vm-driver=virtualbox
 ```
 
 |Tool    |Link|
@@ -50,4 +55,6 @@ $ docker-machine version 0.16.0, build 9371605
 |`Docker`| https://desktop.docker.com/win/stable/amd64/Docker%20Desktop%20Installer.exe
 |`Git BASH`| https://github.com/git-for-windows/git/releases/download/v2.34.1.windows.1/Git-2.34.1-64-bit.exe
 |`WSL`| https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+|`kubectl`| https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msihttps://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+|`minikube`| https://minikube.sigs.k8s.io/docs/start/
 |`VirtualBox`| https://download.virtualbox.org/virtualbox/6.1.30/VirtualBox-6.1.30-148432-Win.exe

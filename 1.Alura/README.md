@@ -600,10 +600,9 @@ spec:
 
 > kubectl delete pod portal-noticias
 > kubectl apply -f .\portal-noticias.yaml
-
 ```
 
-*http://localhost:30001* (admin, admin) - Insere notícia
+*http://localhost:30001* (admin, admin) - Insere notícia<br>
 *http://localhost:30000* - Visualiza notícia
 
 ***Resultado final:***<br> <img src="https://github.com/fabiokerber/lab/blob/main/images/211220211544.PNG">

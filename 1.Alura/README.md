@@ -21,6 +21,8 @@
     &nbsp;&nbsp;&nbsp;&nbsp;*Serve apenas para viabilizar a comunicação INTERNA entre os diferentes pods dentro de um mesmo cluster.*
     *NodePort (Services)*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*Serve apenas para viabilizar a comunicação EXTERNA para o Cluster(SVC).*
+    *LoadBalancer (Services)*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*Abre comunicação para o mundo externo usando o LoadBalancer do proverdor (AWS, GCP, Azure).*
 <br />
 
 **Início**<br>
@@ -168,6 +170,66 @@ spec:
 
 Criar svc-pod-1.yaml
 
+> kubectl apply -f .\pod-1.yaml
+> kubectl apply -f .\svc-pod-1.yaml
+> kubectl get svc -o wide
+> kubectl get pods -o wide
+
+http://localhost:30000
+---
+<br />
+
+**LoadBalancer**<br>
+*PowerShell*
+---
+(Provider Externo <> LoadBalancer <> pod-1)
+
+Criado pod-1.yaml no cluster Kubernetes da AWS
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+  labels:
+    app: primeiro-pod
+spec:
+  containers:
+    - name: container-pod-1
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+
+
+Criado lb.yaml no cluster Kubernetes da AWS
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-pod-1-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: primeiro-pod
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30000
+
+
+Criar svc-pod-1-loadbalancer.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-pod-1-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: primeiro-pod
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30000
 
 > kubectl apply -f .\pod-1.yaml
 > kubectl apply -f .\svc-pod-1.yaml

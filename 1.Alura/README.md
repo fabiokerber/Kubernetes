@@ -558,9 +558,6 @@ spec:
 > kubectl delete pod sistema-noticias
 > kubectl apply -f .\sistema-noticias.yaml
 
-http://localhost:30001 (admin, admin) - Insere notícia
-http://localhost:30000 - Visualiza notícia
-
 > kubectl exec -it portal-noticias -- bash
   # cat /var/www/html/configuracao.php
 

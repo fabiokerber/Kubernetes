@@ -560,7 +560,6 @@ spec:
 
 http://localhost:30001 (admin, admin) - Insere notícia
 http://localhost:30000 - Visualiza notícia
-```
 
 > kubectl exec -it portal-noticias -- bash
   # cat /var/www/html/configuracao.php
@@ -604,6 +603,7 @@ spec:
 
 http://localhost:30001 (admin, admin) - Insere notícia
 http://localhost:30000 - Visualiza notícia
+```
 
 Resultado atual: <img src="https://github.com/fabiokerber/lab/blob/main/images/211220211544.PNG">
 <br />

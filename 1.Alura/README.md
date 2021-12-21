@@ -605,5 +605,5 @@ http://localhost:30001 (admin, admin) - Insere notícia
 http://localhost:30000 - Visualiza notícia
 ```
 
-Resultado atual: <img src="https://github.com/fabiokerber/lab/blob/main/images/211220211544.PNG">
+***Resultado final:***<br> <img src="https://github.com/fabiokerber/lab/blob/main/images/211220211544.PNG">
 <br />

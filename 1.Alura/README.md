@@ -23,6 +23,9 @@
     &nbsp;&nbsp;&nbsp;&nbsp;*Serve apenas para viabilizar a comunicação EXTERNA para o Cluster(SVC).*
     *LoadBalancer (Services)*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*Abre comunicação para o mundo externo usando o LoadBalancer do proverdor (AWS, GCP, Azure).*
+    *Deleção pods e serviços*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*kubectl delete pods --all*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*kubectl delete svc --all*<br>
 <br />
 
 **Início**<br>
@@ -264,4 +267,343 @@ spec:
 
 http://localhost:30000
 ```
+<br />
+
+**Portal Noticias**<br>
+*PowerShell*
+```
+---
+Alterado portal-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: portal-noticias
+  labels:
+    app: portal-noticias
+spec:
+  containers:
+    - name: portal-noticias-container
+      image: aluracursos/portal-noticias:1
+      ports:
+        - containerPort: 80
+---
+
+---
+Criado svc-portal-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: portal-noticias
+  labels:
+    app: portal-noticias
+spec:
+  containers:
+    - name: portal-noticias-container
+      image: aluracursos/portal-noticias:1
+      ports:
+        - containerPort: 80
+---
+
+> kubectl apply -f .\portal-noticias.yaml
+> kubectl apply -f .\svc-portal-noticias.yaml
+> kubectl get svc -o wide
+> kubectl get pods -o wide
+
+http://localhost:30000 (Externo <> svc-portal-noticias <> portal-noticias)
+```
+<br />
+
+**Sistema Noticias**<br>
+*PowerShell*
+```
+---
+Criado sistema-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sistema-noticias
+  labels:
+    app: sistema-noticias
+spec:
+  containers:
+    - name: sistema-noticias-container
+      image: aluracursos/sistema-noticias:1
+      ports:
+        - containerPort: 80
+---
+
+---
+Criado svc-sistema-noticias.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-sistema-noticias
+spec:
+  type: NodePort
+  selector:
+    app: sistema-noticias
+  ports:
+    - port: 80
+      nodePort: 30001
+---
+
+> kubectl apply -f .\sistema-noticias.yaml
+> kubectl apply -f .\svc-sistema-noticias.yaml
+> kubectl get svc -o wide --watch
+> kubectl get pods -o wide --watch
+
+http://localhost:30001 (Externo <> svc-sistema-noticias <> sistema-noticias)
+```
+<br />
+
+**Banco Noticias**<br>
+*PowerShell*
+```
+---
+Criado db-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-noticias
+  labels:
+    app: db-noticias
+spec:
+  containers:
+    - name: db-noticias-container
+      image: aluracursos/mysql-db:1
+      ports:
+        - containerPort: 3306
+---
+
+---
+Criado svc-db-noticias.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-db-noticias
+spec:
+  type: ClusterIP
+  selector:
+    app: db-noticias
+  ports:
+    - port: 3306
+---
+
+> kubectl apply -f .\db-noticias.yaml
+> kubectl apply -f .\svc-db-noticias.yaml
+> kubectl get svc -o wide --watch
+> kubectl get pods -o wide --watch
+```
+<br />
+
+**Banco Noticias - Variaveis Instalação**<br>
+*PowerShell*<br>
+(https://hub.docker.com/_/mysql)
+```
+---
+Editar db-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-noticias
+  labels:
+    app: db-noticias
+spec:
+  containers:
+    - name: db-noticias-container
+      image: aluracursos/mysql-db:1
+      ports:
+        - containerPort: 3306
+      env:
+        - name: "MYSQL_ROOT_PASSWORD"
+          env: "q1w2e3r4"
+        - name: "MYSQL_DATABASE"
+          env: "empresa"
+        - name: "MYSQL_PASSWORD"
+          env: "q1w2e3r4"
+---
+
+> kubectl delete pod db-noticias
+> kubectl apply -f .\db-noticias.yaml
+> kubectl get svc -o wide --watch
+> kubectl get pods -o wide --watch
+
+> kubectl exec -it db-noticias -- bash
+  # mysql -u root -p
+  > show databases; (já configurado na imagem)
+  > use empresa; (já configurado na imagem)
+  > show tables; (já configurado na imagem)
+  > select * from usuario; (já configurado na imagem)
+
+> kubectl exec -it sistema-noticias -- bash
+  # cat /var/www/html/bancodedados.php (variaveis de ambiente que devem constar no arquivo de criação do pod)
+```
+<br />
+
+**Criando um ConfigMap**<br>
+*PowerShell*
+```
+---
+Criar db-configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-configmap
+data:
+  MYSQL_ROOT_PASSWORD: q1w2e3r4
+  MYSQL_DATABASE: empresa
+  MYSQL_PASSWORD: q1w2e3r4
+---
+
+---
+Editar db-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-noticias
+  labels:
+    app: db-noticias
+spec:
+  containers:
+    - name: db-noticias-container
+      image: aluracursos/mysql-db:1
+      ports:
+        - containerPort: 3306
+---
+
+> kubectl apply -f .\db-configmap.yaml
+> kubectl get configmap
+> kubectl describe configmap db-configmap
+```
+<br />
+
+**Aplicando o ConfigMap ao projeto**<br>
+*PowerShell*
+```
+---
+Editar db-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-noticias
+  labels:
+    app: db-noticias
+spec:
+  containers:
+    - name: db-noticias-container
+      image: aluracursos/mysql-db:1
+      ports:
+        - containerPort: 3306
+      envFrom:
+        - configMapRef: (como este confimap possui somente as variaveis para o db-noticias.yaml, foram importas todas)
+          name: db-configmap
+#      env: (forma de importar somente as variaveis necessarias de um arquivo que possui outros parametros adicionais)
+#        - name: MYSQL_ROOT_PASSWORD
+#          valueFrom:
+#            configMapKeyRef:
+#              name: db-configmap
+#              key: MYSQL_ROOT_PASSWORD
+---
+
+
+> kubectl delete pod db-noticias
+> kubectl apply -f .\db-noticias.yaml
+
+---
+Criar sistema-configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sistema-configmap
+data:
+  HOST_DB: svc-db-noticias:3306 (esta variavel informara o valor de HOST_DB para o sistemas-noticas.yaml. neste caso o sistema-noticias.yaml ira visualizar o DNS do SVC, que por sua vez se comunica com o db-noticias)
+  USER_DB: root
+  PASS_DB: q1w2e3r4
+  DATABASE_DB: empresa
+---
+
+> kubectl apply -f sistema-configmap.yaml
+
+---
+Editar sistema-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sistema-noticias
+  labels:
+    app: sistema-noticias
+spec:
+  containers:
+    - name: sistema-noticias-container
+      image: aluracursos/sistema-noticias:1
+      ports:
+        - containerPort: 80
+      envFrom:
+        - configMapRef: (como este confimap possui somente as variaveis para o db-noticias.yaml, foram importas todas)
+            name: sistema-configmap
+---
+
+> kubectl delete pod sistema-noticias
+> kubectl apply -f .\sistema-noticias.yaml
+
+http://localhost:30001 (admin, admin) - Insere notícia
+http://localhost:30000 - Visualiza notícia
+```
+
+> kubectl exec -it portal-noticias -- bash
+  # cat /var/www/html/configuracao.php
+
+---
+Criar portal-configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portal-configmap
+data:
+  IP_SISTEMA: http://localhost:30001
+  #IP_SISTEMA: http://<INTERNAL-IP>:30001 (Linux = kubectl get nodes -o wide)
+---
+
+> kubectl apply -f .\portal-configmap.yaml
+
+---
+Editar portal-noticias.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: portal-noticias
+  labels:
+    app: portal-noticias
+spec:
+  containers:
+    - name: portal-noticias-container
+      image: aluracursos/portal-noticias:1
+      ports:
+        - containerPort: 80
+      envFrom:
+        - configMapRef:
+            name: portal-configmap
+---
+
+> kubectl delete pod portal-noticias
+> kubectl apply -f .\portal-noticias.yaml
+
+http://localhost:30001 (admin, admin) - Insere notícia
+http://localhost:30000 - Visualiza notícia
+
+Resultado atual: <img src="https://github.com/fabiokerber/lab/blob/main/images/211220211544.PNG">
 <br />

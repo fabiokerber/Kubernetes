@@ -22,7 +22,7 @@
     *NodePort (Services)*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*Serve apenas para viabilizar a comunicação EXTERNA para o Cluster(SVC).*
     *LoadBalancer (Services)*<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;*Abre comunicação para o mundo externo usando o LoadBalancer do proverdor (AWS, GCP, Azure).*<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;*Abre comunicação para o mundo externo usando o LoadBalancer do proverdor (AWS, GCP, Azure).*
     *Deleção pods e serviços*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*kubectl delete pods --all*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*kubectl delete svc --all*<br>

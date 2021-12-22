@@ -2,13 +2,14 @@
 
 |Training     |Tools|
 |-------------|-----------|
-|`1.Alura`| Kubernetes
+|`1.Alura`| Kubernetes: Pods, Services e ConfigMaps
+|`2.Alura`| Kubernetes: Pods, Services e ConfigMaps
 
 Pré requisito:
 
 
 Download Docker:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;https://www.docker.com/products/docker-desktop
+&nbsp;&nbsp;&nbsp;&nbsp;https://www.docker.com/products/docker-desktop<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Settings > Kubernetes > Enable Kubernetes > Apply & Restart
 
 Comandos WSL:<br>
@@ -27,13 +28,6 @@ $ sudo apt-get update
 $ sudo apt-get install docker-ce
 $ sudo docker version
 $ sudo usermod -aG docker $(whoami)
-```
-
-Instalação kubectl Ubuntu:<br>
-```
-$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-$ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-$ kubectl version --client
 ```
 
 Instalação kubectl Ubuntu:<br>

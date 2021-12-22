@@ -5,7 +5,8 @@
 
 **Anotações**<br>
     *ReplicaSet = Mantém o número de pods Ready equivalente ao Desired. Caso um pod dê erro o mesmo é substituído automaticamente.*<br>
-    *Master = Control Plane*<br>
+    *Deployment = Camada acima de um ReplicaSet. Quando cria um Deployment automaticamente cria-se um ReplicaSet. Permite controle de versionamento das imagens e pods.
+    Mais comum é utilizado o Deployment ao invés do ReplicaSet.*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*Gerenciar cluster*<br>
 <br />
 
@@ -53,9 +54,68 @@ spec:
 ```
 <br />
 
-**O primeiro pod**<br>
+**Conhecendo Deployments**<br>
 *PowerShell*
 ```
+---
+Criar nginx-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-eployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx-pod
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+  selector:
+    matchLabels:
+      app: nginx-pod
+---
+
+> kubectl apply -f .\nginx-deployment.yaml
+> kubectl get deployments
+> kubectl rollout history deployment nginx-deployment (mostra a versão atual)
+
+---
+Alterar nginx-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-eployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx-pod
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+  selector:
+    matchLabels:
+      app: nginx-pod
+---
+
+> kubectl apply -f .\nginx-deployment.yaml --record
+> kubectl rollout history deployment nginx-deployment (mostra a nova versão após ter alterado para latest)
+> kubectl annotate deployment nginx-deployment kubernetes.io/change-cause="Definindo a imagem com a versão latest"
+> kubectl rollout history deployment nginx-deployment
+> kubectl undo deployment nginx-deployment --to-revision=1 (retorna o deployment para a versão 1 conforme o history deployment)
 
 ```
 <br />

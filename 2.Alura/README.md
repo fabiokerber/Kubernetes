@@ -7,6 +7,7 @@
     *ReplicaSet = Mantém o número de pods Ready equivalente ao Desired. Caso um pod dê erro o mesmo é substituído automaticamente.*<br>
     *Deployment = Camada acima de um ReplicaSet. Quando cria um Deployment automaticamente cria-se um ReplicaSet. Permite controle de versionamento das imagens e pods.
     Mais comum é utilizado o Deployment ao invés do ReplicaSet.*<br>
+    *Volumes (hostPath) = Bindar o volume de fora para dentro do pod.*<br>
     &nbsp;&nbsp;&nbsp;&nbsp;*Gerenciar cluster*<br>
 <br />
 
@@ -116,10 +117,26 @@ spec:
 > kubectl annotate deployment nginx-deployment kubernetes.io/change-cause="Definindo a imagem com a versão latest"
 > kubectl rollout history deployment nginx-deployment
 > kubectl undo deployment nginx-deployment --to-revision=1 (retorna o deployment para a versão 1 conforme o history deployment)
-
+> kubectl apply -f 
 ```
 <br />
 
+**Conhecendo Deployments**<br>
+*PowerShell*
+```
+https://kubernetes.io/docs/concepts/storage/volumes/
+---
+Criar nginx-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-eployment
+spec:
+---
+
+```
+<br />
 
 *http://localhost:30001* (admin, admin) - Insere notícia<br>
 *http://localhost:30000* - Visualiza notícia

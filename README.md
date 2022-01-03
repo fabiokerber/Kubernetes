@@ -3,7 +3,7 @@
 |Training     |Tools|
 |-------------|-----------|
 |`1.Alura`| Kubernetes: Pods, Services e ConfigMaps
-|`2.Alura`| Kubernetes: Pods, Services e ConfigMaps
+|`2.Alura`| Kubernetes: Deployments, Volumes e Escalabilidade
 
 Pré requisito:
 

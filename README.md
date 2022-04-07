@@ -4,6 +4,7 @@
 |-------------|-----------|
 |`1.Alura`| Kubernetes: Pods, Services e ConfigMaps
 |`2.Alura`| Kubernetes: Deployments, Volumes e Escalabilidade
+|`3.Alura`| Azure: gerencie Kubernetes com AKS e ACR
 
 Pré requisito:
 

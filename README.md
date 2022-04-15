@@ -53,3 +53,66 @@ $ minikube start --vm-driver=virtualbox
 |`kubectl`| https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msihttps://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 |`minikube`| https://minikube.sigs.k8s.io/docs/start/
 |`VirtualBox`| https://download.virtualbox.org/virtualbox/6.1.30/VirtualBox-6.1.30-148432-Win.exe
+
+```
+# kubectl cheat sheet
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+# Version
+kubectl version
+
+# Connect aks
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --admin --overwrite-existing
+
+# Set namespace
+kubectl config set-context --current --namespace=NAMESPACE
+
+# Set replica number
+kubectl scale deployment DEPLOYMENT_NAME -n NAMESPACE --replicas=0
+kb scale --replicas=1 deployment/DEPLOYMENT_NAME -n NAMESPACE
+
+# Logs
+kubectl logs POD_NAME -n NAMESPACE
+kubectl logs -f POD_NAME -n NAMESPACE
+
+# Describe
+kubectl describe pod/POD_NAME -n NAMESPACE
+
+# Apply object
+kubectl apply -f FILE_NAME.yaml
+
+# Delete object
+kubectl delete -f FILE_NAME.yaml
+kubectl delete namespace NAMESPACE
+kubectl delete CustomResourceDefinition secretproviderclasses.secrets-store.csi.x-k8s.io -n NAMESPACE
+kubectl delete CustomResourceDefinition secretproviderclasspodstatuses.secrets-store.csi.x-k8s.io -n NAMESPACE
+kubectl delete ClusterRole secretproviderclasses-role -n NAMESPACE
+kubectl delete ClusterRoleBinding secretproviderclasses-rolebinding -n NAMESPACE
+kubectl delete CSIDriver secrets-store.csi.k8s.io -n NAMESPACE
+kubectl delete ClusterRole secretprovidersyncing-role -n NAMESPACE
+kubectl delete ClusterRoleBinding secretprovidersyncing-rolebinding -n NAMESPACE
+
+# List
+kubectl get all -n consent-payment    # List all objects
+kubectl get nodes -w    # List nodes and watch it
+kubectl get pods -o wide       
+
+# List pods with details
+kubectl logs POD_NAME --namespace=NAMESPACE --follow
+kubectl get services --namespace=NAMESPACE
+
+# Top
+kubectl top nodes   # Top nodes
+kubectl top pods # Top pods
+watch -n 1 'kubectl top pods'
+
+# Get yaml file
+kubectl get deploy DEPLOYMENT_NAME -o yaml    # Get yaml
+
+# Restart deployment without downtime
+kubectl rollout restart deployment DEPLOYMENT_NAME -n NAMESPACE
+
+# Exec
+kubectl exec -it pods/POD_NAME sh
+kubectl exec --stdin --tty POD_NAME -- /bin/bash
+```

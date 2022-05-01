@@ -1,0 +1,37 @@
+Vagrant.configure('2') do |config|
+
+    config.env.enable
+    config.vm.boot_timeout = 1200
+
+    config.vm.define 'kubernetes_srv' do |kubernetes_srv|
+
+        kubernetes_srv.vm.box = 'ubuntu/focal64'
+        kubernetes_srv.vm.hostname = 'kubernetes-srv'
+        kubernetes_srv.vm.network 'private_network', ip: ENV['KUBERNETES_IP']
+
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo apt-get update'
+        kubernetes_srv.vm.provision 'shell', inline: 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo apt-get update'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo apt-get install docker-ce'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo docker version'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo usermod -aG docker $(whoami)'
+
+        kubernetes_srv.vm.provision 'shell', inline: 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl'
+        kubernetes_srv.vm.provision 'shell', inline: 'kubectl version --client'
+        kubernetes_srv.vm.provision 'shell', inline: 'curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo install minikube-linux-amd64 /usr/local/bin/minikube'
+        kubernetes_srv.vm.provision 'shell', inline: 'minikube start --vm-driver=virtualbox'
+
+        kubernetes_srv.vm.provider 'virtualbox' do |vb|
+            vb.memory = 4096
+            vb.cpus = 4
+            vb.name = 'kubernetes-srv'
+            vb.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+
+        end
+
+    end
+
+end

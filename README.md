@@ -122,6 +122,7 @@ kubectl exec --stdin --tty POD_NAME -- /bin/bash
 https://computingforgeeks.com/install-kubernetes-on-ubuntu-using-k3s/<br>
 https://helm.sh/docs/intro/using_helm/<br>
 https://github.com/helm/helm/releases<br>
+https://blog.elo7.dev/subindo-uma-aplicacao-no-kubernetes-usando-helm/<br>
 ```
 $ sudo su
 # export KUBECONFIG=/etc/rancher/k3s/k3s.yaml

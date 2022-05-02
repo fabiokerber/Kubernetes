@@ -8,21 +8,21 @@ Vagrant.configure('2') do |config|
         kubernetes_srv.vm.box = 'ubuntu/focal64'
         kubernetes_srv.vm.hostname = 'kubernetes-srv'
         kubernetes_srv.vm.network 'private_network', ip: ENV['KUBERNETES_IP']
+        kubernetes_srv.vm.network 'forwarded_port', guest: 8080, host: 8080
 
+        kubernetes_srv.vm.provision 'shell', inline: 'echo "$IP master" >> /etc/hosts', env: {"IP" => ENV['KUBERNETES_IP']}
         kubernetes_srv.vm.provision 'shell', inline: 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -'
         kubernetes_srv.vm.provision 'shell', inline: 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'
         kubernetes_srv.vm.provision 'shell', inline: 'sudo apt update'
-        kubernetes_srv.vm.provision 'shell', inline: 'sudo apt install -y docker-ce conntrack'
-#       kubernetes_srv.vm.provision 'shell', inline: 'sudo apt install -y virtualbox'
-        kubernetes_srv.vm.provision 'shell', inline: 'sudo docker version'
-        kubernetes_srv.vm.provision 'shell', inline: 'sudo usermod -aG docker $(whoami)'
-
-        kubernetes_srv.vm.provision 'shell', inline: 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-        kubernetes_srv.vm.provision 'shell', inline: 'sudo install -o vagrant -g vagrant -m 0755 kubectl /usr/local/bin/kubectl'
-        kubernetes_srv.vm.provision 'shell', inline: 'curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64'
-        kubernetes_srv.vm.provision 'shell', inline: 'sudo install minikube-linux-amd64 /usr/local/bin/minikube'
-#       kubernetes_srv.vm.provision 'shell', inline: 'minikube start --vm-driver=virtualbox --force'
-        kubernetes_srv.vm.provision 'shell', inline: 'sudo minikube start --vm-driver=docker --force'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo apt install -y docker-ce wget'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo systemctl enable docker'
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo usermod -aG docker vagrant'
+        kubernetes_srv.vm.provision 'shell', inline: 'curl -sfL https://get.k3s.io | sh -s - --docker'
+        kubernetes_srv.vm.provision 'shell', inline: 'wget https://get.helm.sh/$HELM -P /tmp/', env: {"HELM" => ENV['VHELM']}
+        kubernetes_srv.vm.provision 'shell', inline: 'tar -xf /tmp/$HELM -C /tmp/', env: {"HELM" => ENV['VHELM']}
+        kubernetes_srv.vm.provision 'shell', inline: 'sudo mv /tmp/linux-386/helm /usr/local/bin/helm'
+        kubernetes_srv.vm.provision 'shell', inline: 'helm repo add stable https://charts.helm.sh/stable'
+        kubernetes_srv.vm.provision 'shell', inline: 'helm repo update'
 
         kubernetes_srv.vm.provider 'virtualbox' do |vb|
             vb.memory = 4096

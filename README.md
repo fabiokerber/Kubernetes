@@ -6,7 +6,7 @@
 |`2.Alura`| Kubernetes: Deployments, Volumes e Escalabilidade
 |`3.Alura`| Azure: gerencie Kubernetes com AKS e ACR
 
-Pré requisito:
+## Pré requisitos<br>
 
 
 Download Docker:<br>
@@ -16,7 +16,7 @@ Download Docker:<br>
 Comandos WSL:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;https://docs.microsoft.com/pt-br/windows/wsl/install-manual 
 
-Instalação Docker Ubuntu:<br>
+## Instalação Docker Ubuntu<br>
 ```
 $ sudo apt-get remove docker docker-engine docker.io
 $ sudo apt-get update
@@ -31,14 +31,14 @@ $ sudo docker version
 $ sudo usermod -aG docker $(whoami)
 ```
 
-Instalação kubectl Ubuntu:<br>
+## Instalação kubectl Ubuntu<br>
 ```
 $ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 $ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 $ kubectl version --client
 ```
 
-Instalação minikube Ubuntu:<br>
+## Instalação minikube Ubuntu<br>
 ```
 $ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 $ sudo install minikube-linux-amd64 /usr/local/bin/minikube
@@ -54,6 +54,7 @@ $ minikube start --vm-driver=virtualbox
 |`minikube`| https://minikube.sigs.k8s.io/docs/start/
 |`VirtualBox`| https://download.virtualbox.org/virtualbox/6.1.30/VirtualBox-6.1.30-148432-Win.exe
 
+## Comandos<br>
 ```
 # kubectl cheat sheet
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
@@ -115,4 +116,16 @@ kubectl rollout restart deployment DEPLOYMENT_NAME -n NAMESPACE
 # Exec
 kubectl exec -it pods/POD_NAME sh
 kubectl exec --stdin --tty POD_NAME -- /bin/bash
+```
+
+## K3s & Helm<br>
+https://computingforgeeks.com/install-kubernetes-on-ubuntu-using-k3s/<br>
+https://helm.sh/docs/intro/using_helm/<br>
+https://github.com/helm/helm/releases<br>
+```
+$ sudo su
+# export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+# helm install nginx-ingress stable/nginx-ingress --namespace kube-system --set defaultBackend.enabled=false
+# kubectl get pods -n kube-system -l app=nginx-ingress -o wide
+# kubectl get svc -o wide
 ```

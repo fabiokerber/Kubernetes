@@ -130,3 +130,42 @@ $ sudo su
 # kubectl get pods -n kube-system -l app=nginx-ingress -o wide
 # kubectl get svc -o wide
 ```
+
+## AKS LAB<br>
+
+# Instalar kustomize local
+```
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+```
+```
+az account set --subscription "Subs - TU"
+terraform workspace select tu
+az aks get-credentials --resource-group azu-rg-tu-lab --name azu-aks-tu-lab-001 --admin --overwrite-existing
+```
+
+# vi kustomization.yaml <br>
+```
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Find the latest tag here: https://github.com/ansible/awx-operator/releases
+  - github.com/ansible/awx-operator/config/default?ref=0.21.0
+
+# Set the image tags to match the git version from above
+images:
+  - name: quay.io/ansible/awx-operator
+    newTag: 0.21.0
+
+# Specify a custom namespace in which to install AWX
+namespace: awx
+```
+```
+~/kustomize build . | kubectl apply -f -
+
+kubectl get namespaces
+kubectl get services --namespace=awx
+kubectl get all -n awx
+```
+
+# Repositorio image awx operator<br>
+https://quay.io/repository/ansible/awx-operator?tab=tags&tag=latest

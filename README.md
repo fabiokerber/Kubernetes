@@ -154,6 +154,28 @@ kubectl get nodes -A
 kubectl get namespaces
 ```
 
+# Attach ACR to AKS<br>
+```
+az aks update -n azu-aks-tu-lab-001 -g azu-rg-tu-lab --attach-acr azuacrtulab001
+
+https://docs.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
+```
+
+# Importanto a imagem awx-operator para o acr<br>
+```
+az acr import --name azuacrtulab001 --source quay.io/ansible/awx-operator:latest --image awx-operator:latest
+```
+
+# Listar azuacrtulab001 imagens<br>
+```
+az acr repository show --name azuacrtulab001 --repository awx-operator
+```
+
+# Listar azuacrtulab001 manifests<br>
+``` 
+az acr repository show-manifests --name azuacrtulab001 --repository awx-operator
+```
+
 # vi kustomization.yaml <br>
 ```
 apiVersion: kustomize.config.k8s.io/v1beta1

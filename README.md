@@ -137,10 +137,21 @@ $ sudo su
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
 ```
+
+# AKS Sequência
+
+1. RG
+2. KV
+3. ACR
+4. AKS
+
+# Trabalhar com Kubernetes a partir do Az Cli<br>
 ```
 az account set --subscription "Subs - TU"
 terraform workspace select tu
 az aks get-credentials --resource-group azu-rg-tu-lab --name azu-aks-tu-lab-001 --admin --overwrite-existing
+kubectl get nodes -A
+kubectl get namespaces
 ```
 
 # vi kustomization.yaml <br>

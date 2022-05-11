@@ -164,6 +164,8 @@ https://docs.microsoft.com/en-us/azure/aks/cluster-container-registry-integratio
 # Importanto a imagem awx-operator para o acr<br>
 ```
 az acr import --name azuacrtulab001 --source quay.io/ansible/awx-operator:latest --image awx-operator:latest
+
+https://quay.io/repository/ansible/awx-operator?tab=tags&tag=latest
 ```
 
 # Listar azuacrtulab001 imagens<br>

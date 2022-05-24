@@ -79,5 +79,5 @@ kubectl get services --namespace=awx
 kubectl get all -n awx
 ```
 
-**Repositorio image awx operator**
+**Repositorio image awx operator**<br>
 https://quay.io/repository/ansible/awx-operator?tab=tags&tag=latest

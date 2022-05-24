@@ -1,18 +1,18 @@
 # AKS LAB
 
-# Instalar kustomize local #
+**Instalar kustomize local**
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
 ```
 
-# AKS Sequência #
+**AKS Sequência**
 
 1. RG
 2. KV
 3. ACR
 4. AKS
 
-# Trabalhar com Kubernetes a partir do Az Cli #
+**Trabalhar com Kubernetes a partir do Az Cli**
 ```
 az account set --subscription "Subs - TU"
 terraform workspace select tu
@@ -21,41 +21,41 @@ kubectl get nodes -A
 kubectl get namespaces
 ```
 
-# Attach ACR to AKS #
+**Attach ACR to AKS**
 ```
 az aks update -n azu-aks-tu-lab-001 -g azu-rg-tu-lab --attach-acr azuacrtulab001
 
 https://docs.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli
 ```
 
-# Importanto a imagem awx-operator para o acr #
+**Importanto a imagem awx-operator para o acr**
 ```
 az acr import --name azuacrtulab001 --source quay.io/ansible/awx-operator:latest --image awx-operator:latest
 
 https://quay.io/repository/ansible/awx-operator?tab=tags&tag=latest
 ```
 
-# Listar repositórios #
+**Listar repositórios**
 ```
 az acr repository list --name azuacrtulab001 --output table
 ```
 
-# Listar imagens #
+**Listar imagens**
 ```
 az acr repository show --name azuacrtulab001 --repository awx-operator --output table
 ```
 
-# Listar Tags #
+**Listar Tags**
 ```
 az acr repository show-tags --name azuacrtulab001 --repository awx-operator --output table
 ```
 
-# Listar azuacrtulab001 manifests #
+**Listar azuacrtulab001 manifests**
 ``` 
 az acr repository show-manifests --name azuacrtulab001 --repository awx-operator
 ```
 
-# vi kustomization.yaml #
+**vi kustomization.yaml**
 ```
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -79,5 +79,5 @@ kubectl get services --namespace=awx
 kubectl get all -n awx
 ```
 
-# Repositorio image awx operator #
+**Repositorio image awx operator**
 https://quay.io/repository/ansible/awx-operator?tab=tags&tag=latest

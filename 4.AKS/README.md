@@ -35,9 +35,19 @@ az acr import --name azuacrtulab001 --source quay.io/ansible/awx-operator:latest
 https://quay.io/repository/ansible/awx-operator?tab=tags&tag=latest
 ```
 
-# Listar azuacrtulab001 imagens<br>
+# Listar repositórios<br>
 ```
-az acr repository show --name azuacrtulab001 --repository awx-operator
+az acr repository list --name azuacrtulab001 --output table
+```
+
+# Listar imagens<br>
+```
+az acr repository show --name azuacrtulab001 --repository awx-operator --output table
+```
+
+# Listar Tags<br>
+```
+az acr repository show-tags --name azuacrtulab001 --repository awx-operator --output table
 ```
 
 # Listar azuacrtulab001 manifests<br>
